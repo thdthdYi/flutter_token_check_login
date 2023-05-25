@@ -25,13 +25,26 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkToken() async {
     final dio = Dio();
 
+    String path = '';
+
     //Token 불러오기
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
-    //Token 여부 검증
-    //----------- 현재는 token이 있는지 없는지만 확인하는 과정 -----------
-    if (refreshToken == null || accessToken == null) {
+    try {
+// ignore: use_build_context_synchronously
+
+      //refresh token을 이용해 access token을 발급받을 수 있음.
+      final resp = await dio.post('http://$ip/$path',
+          options: Options(headers: {'authorization': 'Bearer $refreshToken'}));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const NextPage(),
+        ),
+        (route) => false,
+      );
+    } catch (e) {
+      //에러시 로그인 화면으로 이동하여 다시 로그인함.
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -39,15 +52,15 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         (route) => false,
       );
-    } else {
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => const NextPage(),
-        ),
-        (route) => false,
-      );
     }
+
+    //Token 여부 검증
+    //----------- 현재는 token이 있는지 없는지만 확인하는 과정 -----------
+    // if (refreshToken == null || accessToken == null) {
+
+    // } else {
+
+    // }
     //---------------------------------------------------------
   }
 
@@ -64,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
             height: 16.0,
           ),
           CircularProgressIndicator(
-            color: Colors.white,
+            color: Colors.blue,
           )
         ],
       ),
