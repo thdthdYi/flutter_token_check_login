@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../utils/data.dart';
 import 'nextpage.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,18 +19,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //storage open > 프로그램 빌드할 때마다 로그인이 풀리는 것을 방지
-    final storage = FlutterSecureStorage(); //storage open
-
     final dio = Dio();
 
-    //localhost ipㄴ
-    final emulatorIp = '10.0.2.2:3000';
-    final simulatorIp = '127.0.0.1:3000';
-
-    String path = '';
-
-    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
+    String path = 'auth/login';
 
     return SingleChildScrollView(
       //drag로 키보드 숨기기 가능
@@ -48,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 500.0,
               ),
               TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '아이디',
                   ),
                   onChanged: (String value) {
@@ -59,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8.0,
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '비밀번호',
                 ),
                 onChanged: (String value) {
@@ -73,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  //-------------token을 이용한 로그인 로직 과정 ------------------
                   //ID:비밀번호
                   final rawString = '$username:$password';
 
@@ -93,22 +84,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   //저장소에 값 넣어주기
                   await storage.write(
-                      key: 'REFRESH_TOKEN_KEY', value: refreshToken);
+                      key: REFRESH_TOKEN_KEY, value: refreshToken);
                   await storage.write(
-                      key: 'ACCESS_TOKEN_KEY', value: accessToken);
+                      key: ACCESS_TOKEN_KEY, value: accessToken);
 
                   //토큰 인증이 되면 다음 화면으로 넘어감
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => NextPage(),
+                      builder: (_) => const NextPage(),
                     ),
                   );
                 },
-                //----------------------------------------------------------
-                child: Text('로그인'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),
+                //----------------------------------------------------------
+                child: const Text('로그인'),
               ),
             ],
           ),
