@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkToken() async {
     final dio = Dio();
 
-    String path = '';
+    String path = 'auth/token';
 
     //Token 불러오기
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
@@ -37,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       //refresh token을 이용해 access token을 발급받을 수 있음.
       final resp = await dio.post('http://$ip/$path',
           options: Options(headers: {'authorization': 'Bearer $refreshToken'}));
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (_) => const NextPage(),
@@ -66,20 +67,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      //넓이 최대 > 가운데 정렬
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text('Splash_Screen'),
-          SizedBox(
-            height: 16.0,
-          ),
-          CircularProgressIndicator(
-            color: Colors.blue,
-          )
-        ],
+    return Scaffold(
+      body: SizedBox(
+        //넓이 최대 > 가운데 정렬
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text('Splash_Screen'),
+            SizedBox(
+              height: 16.0,
+            ),
+            CircularProgressIndicator(
+              color: Colors.blue,
+            )
+          ],
+        ),
       ),
     );
   }
