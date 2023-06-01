@@ -1,9 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_token_loninflow/model/login_response.dart';
 import 'package:flutter_token_loninflow/model/token_response.dart';
+import 'package:flutter_token_loninflow/provider/storage_provider.dart';
 
 import '../utils/data.dart';
 import '../utils/data_utils.dart';
+
+//provider에 repository넣어주기.
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final dio = Dio();
+
+  // ignore: unused_local_variable
+  final storage = ref.watch(secureStorageProvider);
+
+  return AuthRepository(baseUrl: 'http://$ip/auth', dio: dio);
+});
 
 class AuthRepository {
   final String baseUrl;

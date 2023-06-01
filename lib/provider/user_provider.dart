@@ -1,10 +1,23 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_token_loninflow/model/user_model.dart';
+import 'package:flutter_token_loninflow/provider/storage_provider.dart';
 import 'package:flutter_token_loninflow/repository/auth_repository.dart';
 import 'package:flutter_token_loninflow/repository/user_me_repository.dart';
 import 'package:flutter_token_loninflow/utils/data.dart';
 // ignore: depend_on_referenced_packages
 import 'package:riverpod/riverpod.dart';
+
+final userProvider =
+    StateNotifierProvider<UserStateNotifier, UserModelBase?>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  final userMeRepository = ref.watch(userMeRepositoryProvider);
+  final storage = ref.watch(secureStorageProvider);
+
+  return UserStateNotifier(
+      authrepository: authRepository,
+      repository: userMeRepository,
+      storage: storage);
+});
 
 class UserStateNotifier extends StateNotifier<UserModelBase?> {
   final AuthRepository authrepository;
