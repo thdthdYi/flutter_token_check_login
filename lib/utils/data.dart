@@ -15,5 +15,6 @@ const ACCESS_TOKEN_KEY = 'ACCESS_TOKEN_KEY'; //해당서버 유효기간 - 5분
 // ignore: constant_identifier_names
 const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN_KEY'; //해당서버 유효기간 - 하루
 
-//storage open > 프로그램 빌드할 때마다 로그인이 풀리는 것을 방지
+//storage open > 프로그램 빌드할 때마다 로그인이 풀리는 것을 방지s
 const storage = FlutterSecureStorage(); //storage open
+

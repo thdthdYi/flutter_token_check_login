@@ -29,12 +29,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
     //Token 불러오기
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
     try {
 // ignore: use_build_context_synchronously
 
       //refresh token을 이용해 access token을 발급받을 수 있음.
+      //로그인 시 refresh token 발급 - refresh token을 이용해 만료된 access token 발급
+      //access token을 이용해 api 정보 접근
+      // ignore: unused_local_variable
       final resp = await dio.post('http://$ip/$path',
           options: Options(headers: {'authorization': 'Bearer $refreshToken'}));
       // ignore: use_build_context_synchronously
@@ -71,9 +73,9 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SizedBox(
         //넓이 최대 > 가운데 정렬
         width: MediaQuery.of(context).size.width,
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text('Splash_Screen'),
             SizedBox(
               height: 16.0,
