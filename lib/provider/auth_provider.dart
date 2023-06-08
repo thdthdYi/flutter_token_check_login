@@ -1,8 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_token_loninflow/model/user_model.dart';
 import 'package:flutter_token_loninflow/provider/user_provider.dart';
+import 'package:flutter_token_loninflow/view/splash_screen.dart';
 import 'package:go_router/go_router.dart';
+
+import '../view/login_screen.dart';
+import '../view/nextpage.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider(ref: ref);
@@ -11,7 +18,9 @@ final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
 class AuthProvider extends ChangeNotifier {
   final Ref ref;
 
-  AuthProvider({required this.ref}) {
+  AuthProvider({
+    required this.ref,
+  }) {
     ref.listen<UserModelBase?>(userProvider, (previous, next) {
       //UserProvider에서 변경사항이 생겼을 때만 AuthProvider에서 알려줌
       if (previous != next) {
@@ -19,8 +28,32 @@ class AuthProvider extends ChangeNotifier {
       }
     });
   }
+
+//goroute 만들어주기
+  List<GoRoute> get routes => [
+        GoRoute(
+          path: '/nextPage',
+          name: NextPage.routeName, //이름은 겹치면 안됌.
+          builder: (_, __) => const NextPage(),
+        ),
+        GoRoute(
+          path: '/splash',
+          name: SplashScreen.routeName, //이름은 겹치면 안됌.
+          builder: (_, __) => SplashScreen(),
+        ),
+        GoRoute(
+          path: '/login',
+          name: LoginScreen.routeName, //이름은 겹치면 안됌.
+          builder: (_, __) => const LoginScreen(),
+        ),
+      ];
+
+  logout() {
+    ref.read(userProvider.notifier).logout();
+  }
+
 //앱을 처음 시작할 때 토큰이 존재하는지 확인 후 보내줄 스크린을 확인하는 과정 - splash screen
-  String? redirectLogic(GoRouterState state) {
+  FutureOr<String?> redirectLogic(BuildContext _, GoRouterState state) {
     //유저상태
     final UserModelBase? user = ref.read(userProvider);
     //로그인 중

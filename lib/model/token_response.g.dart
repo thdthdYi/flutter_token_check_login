@@ -11,7 +11,6 @@ TokenResponse _$TokenResponseFromJson(Map<String, dynamic> json) =>
       accessToken: json['accessToken'] as String,
     );
 
-// ignore: unused_element
 Map<String, dynamic> _$TokenResponseToJson(TokenResponse instance) =>
     <String, dynamic>{
       'accessToken': instance.accessToken,

@@ -12,7 +12,6 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
       accessToken: json['accessToken'] as String,
     );
 
-// ignore: unused_element
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
     <String, dynamic>{
       'refreshToken': instance.refreshToken,

@@ -45,9 +45,16 @@ class UserStateNotifier extends StateNotifier<UserModelBase?> {
       return;
     }
 
-    final resp = await repository.getMe();
+    try {
+      final resp = await repository.getMe();
 
-    state = resp;
+      state = resp;
+    } catch (e, stack) {
+      print(e);
+      print(stack);
+
+      state = null;
+    }
   }
 
 //UserModelBase로 받는 이유는 데이터가 어떤 형식으로 들어올지 모르기 때문에.
@@ -69,6 +76,8 @@ class UserStateNotifier extends StateNotifier<UserModelBase?> {
       //Token을 발급받았으니, 서버에서 해당되는 사용자를 가져오기 위함.
       //user를 넣지 않으면 로그인한 상태인지 알 수 없음 > 유효한 토큰임
       final userResp = await repository.getMe();
+
+      state = userResp; //사용자 정보로 상태 업데이트
 
       return userResp;
     } catch (e) {

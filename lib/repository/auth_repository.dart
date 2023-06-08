@@ -7,12 +7,18 @@ import 'package:flutter_token_loninflow/provider/storage_provider.dart';
 import '../utils/data.dart';
 import '../utils/data_utils.dart';
 
-//provider에 repository넣어주기.
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
+final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
 
+  return dio;
+});
+
+//provider에 repository넣어주기.
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+
   // ignore: unused_local_variable
-  final storage = ref.watch(secureStorageProvider);
+  // final storage = ref.watch(secureStorageProvider);
 
   return AuthRepository(baseUrl: 'http://$ip/auth', dio: dio);
 });
@@ -35,9 +41,11 @@ class AuthRepository {
     //DataUtils에 encode 함수로 응답 encode
     final serialized = DataUtils.plainTobase64('$username:$password');
 
-    final resp = await dio.post('http://$baseUrl/login', //path에 post
+    final resp = await dio.post('$baseUrl/login', //path에 post
         //encode된 token을 authorization에 넣어줌
-        options: Options(headers: {'authorization': 'Basic $serialized'}));
+        options: Options(headers: {
+          'authorization': 'Basic $serialized',
+        }));
 
     return LoginResponse.fromJson(resp.data);
   }

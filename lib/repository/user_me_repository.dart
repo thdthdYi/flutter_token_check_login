@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../utils/data.dart';
+import 'auth_repository.dart';
 
 part 'user_me_repository.g.dart';
 
@@ -13,7 +14,7 @@ part 'user_me_repository.g.dart';
 
 //provider 만들기
 final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
-  final dio = Dio();
+  final dio = ref.watch(dioProvider);
   // ignore: unused_local_variable
   final storage = ref.watch(secureStorageProvider);
 
